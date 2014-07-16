@@ -12,11 +12,15 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     
+    <!-- Bootstrap Glyphicons -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    
     <!-- Angular -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular.js"></script>
     
      <!-- Angular-UI -->
-    <script src="/content/mymoney/assets/angular-ui/ui-bootstrap-0.11.0.js"></script>
+<!--     <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-0.11.0.js"></script> -->
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.0.js"></script>
     
     <!-- MyMoney -->
     <script src="/content/mymoney/assets/mymoney/mymoney.js"></script>
