@@ -11,12 +11,18 @@ myMoneyApp.controller('billsCtrl', function($scope) {
 	} ];
 
 	$scope.addProduct = function() {
+		name = $scope.enteredValue
 		$scope.products.push({
 			"name" : $scope.enteredName,
 			"value" : $scope.enteredValue
 		});
 		$scope.enteredName = '';
 		$scope.enteredValue = '';
+		
+		$scope.total = 0;
+		angular.forEach($scope.products, function(value, key) {
+			$scope.total = $scope.total + +value.value;
+		});
 	};
 
 	$scope.open = function($event) {
