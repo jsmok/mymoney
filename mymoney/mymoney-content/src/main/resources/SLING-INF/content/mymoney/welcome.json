@@ -1,6 +1,5 @@
 {
 	  "jcr:title" : "Welcome",
-	  "title" : "Welcome",
-	  "sling:resourceSuperType" : "mymoney:abstract",
+	  "title" : "Welcome Title",
       "sling:resourceType" : "mymoney:welcome"
 }

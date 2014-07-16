@@ -1,6 +1,0 @@
-{
-	  "jcr:title" : "Bills",
-	  "title" : "Bills",
-	  "sling:resourceSuperType" : "mymoney:abstract",
-      "sling:resourceType" : "mymoney:bills"
-}
