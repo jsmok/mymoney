@@ -1,0 +1,1 @@
+var myMoneyApp = angular.module("myMoneyApp", ['ui.bootstrap']);
