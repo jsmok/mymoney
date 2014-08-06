@@ -43,7 +43,7 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 
 		$http({
 			method : 'POST',
-			url : '/content/mymoney/bills/' + yyyy
+			url : '/content/mymoney/bill-data/' + yyyy
 					+ '/' + mm + '/' + dd + '/'
 					+ $scope.desc,
 			data : $.param(params), // jQuery needed - why AngularJS, why?
