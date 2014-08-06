@@ -38,7 +38,6 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 		params["date@TypeHint"] = "Date";
 		params["date"] = $scope.date;
 		angular.forEach($scope.products, function(value, key) {
-			alert(key);
 			params['products/' + value.name + '/value'] = value.value;
 		});
 
