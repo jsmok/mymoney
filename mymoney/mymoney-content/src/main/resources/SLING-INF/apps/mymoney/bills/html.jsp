@@ -64,16 +64,23 @@
 							</tr>
 						</tbody>
 					</table>
+				</form>
+				<form class="form-inline">
 					<div class="form-group" class="form-inline">
 						<div class="input-group">
-							<span class="input-group-addon"><span class="glyphicon glyphicon-pushpin"> Name:</span></span>
-							<input type="text" class="form-control" id="name" ng-model="enteredName" placeholder="Name">
+							<span class="input-group-addon"><span
+								class="glyphicon glyphicon-pushpin"> Name:</span></span> <input
+								type="text" class="form-control" id="name" ng-model="enteredName"
+								placeholder="Name">
 						</div>
 						<div class="input-group">
-							<span class="input-group-addon"><span class="glyphicon glyphicon-usd"> Value:</span></span>
-							<input type="text" class="form-control" id="name" ng-model="enteredValue" placeholder="Value">
+							<span class="input-group-addon"><span
+								class="glyphicon glyphicon-usd"> Value:</span></span> <input type="text"
+								class="form-control" id="name" ng-model="enteredValue"
+								placeholder="Value">
 						</div>
-						<button ng-click="addProduct()" class="btn btn-default" id="addProduct">Add</button>
+						<button ng-click="addProduct()" class="btn btn-default"
+							id="addProduct">Add</button>
 					</div>
 				</form>
 			</div>				
