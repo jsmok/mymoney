@@ -1,5 +1,7 @@
 myMoneyApp.controller('billsCtrl', function($scope, $http) {
 	$scope.products = [];
+	$scope.total = 0;
+	$scope.bills = [];
 
 	$scope.addProduct = function() {
 		name = $scope.enteredValue
@@ -26,17 +28,18 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 	$scope.postReceipt = function() {
 
 		var yyyy = $scope.date.getFullYear().toString();
-		var mm = ($scope.date.getMonth() + 1).toString(); // getMonth()
-															// is
-															// zero-based
+		var mm = ($scope.date.getMonth() + 1).toString();
 		mm = mm[1] ? mm : "0" + mm[0];
 		var dd = $scope.date.getDate().toString();
 		dd = dd[1] ? dd : "0" + dd[0];
 
 		var params = {};
+		params["sling:resourceType"] = "mymoney:bill";
 		params["desc"] = $scope.desc;
 		params["date@TypeHint"] = "Date";
 		params["date"] = $scope.date;
+		params["total"] = $scope.total;
+		params["total@TypeHint"] = "Double";
 		angular.forEach($scope.products, function(value, key) {
 			params['products/' + value.name + '/value'] = value.value;
 		});
@@ -52,19 +55,28 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 			}
 			// set the headers so angular passing info as
 			// form data (not request payload)
-		}).success(function(data) {
+		})
+		.success(function(data) {
 			console.log(data);
-
-			if (!data.success) {
-				// if not successful, bind errors to error
-				// variables
-				// $scope.errorName = data.errors.name;
-				// $scope.errorSuperhero =
-				// data.errors.superheroAlias;
-			} else {
-				// if successful, bind success message to message
-				//$scope.message = data.message;
-			}
+			$scope.getBills();
 		});
 	};
+	
+	$scope.getBills = function() {
+        $http({
+        	method : 'GET',
+        	url : "/content.query.tidy.inifinity.json?queryType=xpath&statement=//*[@sling:resourceType = 'mymoney:bill'] order by @date descending&property=total&property=date"
+        })
+        .success(function(data, status) {
+        	console.log(data);
+        	angular.forEach(data, function(value, key) {
+    			value.date = new Date(value.date);
+    		});
+        	$scope.bills = data;
+        });
+    };
+    $scope.bills = $scope.getBills();
+	
+	
 });
+

@@ -1,4 +1,4 @@
-<%@ include file="/apps/slingdemo/global.jsp"%>
+<%@ include file="/apps/mymoney/global.jsp"%>
 <!DOCTYPE html>
 <html lang="en" ng-app="myMoneyApp">
 <head>
@@ -8,7 +8,7 @@
 	<script src="/content/mymoney/assets/mymoney/bills.js"></script>
 </head>
 <body>
-	<div class="container">
+	<div class="container" ng-controller="billsCtrl">
 		<sling:include resource="<%=resource%>" replaceSelectors="menu" />
 		<div class="jumbotron">
 			<h1>Add bills</h1>
@@ -18,14 +18,14 @@
 				<code><%=resource.getPath()%></code>
 			</p>
 		</div>
-		<div ng-controller="billsCtrl" class="panel panel-default">
+		<div class="panel panel-default">
 			<div class="panel-heading">
-				<h3 class="panel-title">
-					<span class="glyphicon glyphicon-list-alt"></span> Bill
-				</h3>
+				<div class="panel-title">
+					<span class="glyphicon glyphicon-list-alt"></span> Bill details:
+				</div>
 			</div>
 			<div class="panel-body">
-			     <form class="form-inline" role="form" ng-submit="postReceipt()">
+				<form class="form-inline" role="form" ng-submit="postReceipt()">
 					<div class="input-group">
 						<span class="input-group-addon">Desc:</span>
 						<input type="text" class="form-control" id="desc" ng-model="desc" placeholder="Description">
@@ -38,52 +38,76 @@
 			            </span>
 					</div>
 					<button type="submit" class="btn btn-default" id="createBill">Submit</button>				
-					<br>
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>Product</th>
-								<th style="text-align: center">#</th>
-								<th class="text-center">Price</th>
-								<th class="text-center">Total</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="product in products">
-								<td class="col-md-9"><em>{{product.name}}</em>
-								</h4></td>
-								<td class="col-md-1" style="text-align: center">1</td>
-								<td class="col-md-1 text-center">{{product.value}}</td>
-								<td class="col-md-1 text-center">{{product.value}}</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td></td>
-								<td class="text-right"><strong>Total: </strong></td>
-								<td class="text-center text-danger"><strong>{{total}}</strong></td>
-							</tr>
-						</tbody>
-					</table>
 				</form>
-				<form class="form-inline">
-					<div class="form-group" class="form-inline">
-						<div class="input-group">
-							<span class="input-group-addon"><span
-								class="glyphicon glyphicon-pushpin"> Name:</span></span> <input
-								type="text" class="form-control" id="name" ng-model="enteredName"
-								placeholder="Name">
-						</div>
-						<div class="input-group">
-							<span class="input-group-addon"><span
-								class="glyphicon glyphicon-usd"> Value:</span></span> <input type="text"
-								class="form-control" id="name" ng-model="enteredValue"
-								placeholder="Value">
-						</div>
-						<button ng-click="addProduct()" class="btn btn-default"
-							id="addProduct">Add</button>
+				<br>
+				<table class="table table-hover" ng-show='products.length > 0'>
+					<thead>
+						<tr>
+							<th>Product</th>
+							<th style="text-align: center">#</th>
+							<th class="text-center">Price</th>
+							<th class="text-center">Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="product in products">
+							<td class="col-md-9"><em>{{product.name}}</em>
+							</h4></td>
+							<td class="col-md-1" style="text-align: center">1</td>
+							<td class="col-md-1 text-center">{{product.value}}</td>
+							<td class="col-md-1 text-center">{{product.value}}</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td class="text-right"><strong>Total: </strong></td>
+							<td class="text-center text-danger"><strong>{{total}}</strong></td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="panel panel-default">
+					<div class="panel-heading">Add product:</div>
+					<div class="panel-body">
+						<form class="form-inline">
+							<div class="form-group" class="form-inline">
+								<div class="input-group">
+									<span class="input-group-addon"><span class="glyphicon glyphicon-pushpin"> Name:</span></span> 
+									<input type="text" class="form-control" id="name" ng-model="enteredName" placeholder="Name">
+								</div>
+								<div class="input-group">
+									<span class="input-group-addon"><span class="glyphicon glyphicon-usd"> Value:</span></span> 
+									<input type="text" class="form-control" id="name" ng-model="enteredValue" placeholder="Value">
+								</div>
+								<button ng-click="addProduct()" class="btn btn-default"	id="addProduct">Add</button>
+							</div>
+						</form>
 					</div>
-				</form>
+				</div>
 			</div>				
+		</div>
+		<div class="panel panel-default" ng-show='bills.length > 0'>
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					<span class="glyphicon glyphicon glyphicon-list"></span> Bills
+				</h3>
+			</div>
+			<!-- Table -->
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Desc</th>
+						<th>Total</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="bill in bills">
+						<td>{{bill.date | date:'yyyy-MM-dd'}}</td>
+						<td>{{bill.name}}</td>
+						<td>{{bill.total}}</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </body>

@@ -1,4 +1,4 @@
-<%@ include file="/apps/slingdemo/global.jsp" %>
+<%@ include file="/apps/mymoney/global.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
