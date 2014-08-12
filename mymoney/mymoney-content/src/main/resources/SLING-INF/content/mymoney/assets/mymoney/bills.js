@@ -60,14 +60,18 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 	$scope.editBill = function(path) {
 		 $http({
 			 method : 'GET',
-			 url : path+".infinity.json"
+			 url : path+".harray.infinity.json"
 	     })
 	     .success(function(data) {
 	    	 console.log(data);
 	    	 $scope.desc = data.desc;
 	    	 $scope.date = getSimpleDateString(new Date(data.date));
-	    	 $scope.products = data.products;
-	    	 console.log(data.products);
+	    	 $scope.products = data.__children__[0].__children__;
+	    	 angular.forEach($scope.products, function(value, key) {
+	 			value.name = value.__name__;
+	 			$scope.total = $scope.total + +value.value;
+	 		 });
+	    	 console.log( $scope.products);
 	     });
 	}
 	

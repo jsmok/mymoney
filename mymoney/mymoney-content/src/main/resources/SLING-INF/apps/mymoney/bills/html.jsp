@@ -25,7 +25,7 @@
 				</div>
 			</div>
 			<div class="panel-body">
-				<form class="form-inline" role="form" ng-submit="createBill()">
+				<form name="form" class="form-inline" role="form" ng-submit="createBill()">
 					<div class="input-group">
 						<span class="input-group-addon">Desc:</span>
 						<input type="text" class="form-control" id="desc" ng-model="desc" placeholder="Description">
@@ -37,7 +37,8 @@
 			            	<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
 			            </span>
 					</div>
-					<button type="submit" class="btn btn-default" id="createBill">Submit</button>				
+					<button type="submit" class="btn btn-default" id="createBill">Submit</button>
+					{{ form.$valid }}		
 				</form>
 				<br>
 				<table class="table table-hover" ng-show='products.length > 0'>
