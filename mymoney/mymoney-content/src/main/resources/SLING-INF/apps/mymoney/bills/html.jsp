@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="myMoneyApp">
 <head>
-	<title>Add bills</title>
+	<title>Bills</title>
 	<sling:include resource="<%=resource%>" replaceSelectors="head" />
 	<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 	<script src="/content/mymoney/assets/mymoney/bills.js"></script>
@@ -11,8 +11,8 @@
 	<div class="container" ng-controller="billsCtrl">
 		<sling:include resource="<%=resource%>" replaceSelectors="menu" />
 		<div class="jumbotron">
-			<h1>Add bills</h1>
-			<p>Here you can add some bills</p>
+			<h1>Bills</h1>
+			<p>Here you can make some CRUD bills</p>
 			<p>
 				Since it's a Sling demo - here is a path to this resource:
 				<code><%=resource.getPath()%></code>
@@ -25,7 +25,7 @@
 				</div>
 			</div>
 			<div class="panel-body">
-				<form class="form-inline" role="form" ng-submit="postReceipt()">
+				<form class="form-inline" role="form" ng-submit="createBill()">
 					<div class="input-group">
 						<span class="input-group-addon">Desc:</span>
 						<input type="text" class="form-control" id="desc" ng-model="desc" placeholder="Description">
@@ -98,6 +98,7 @@
 						<th>Date</th>
 						<th>Desc</th>
 						<th>Total</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -105,6 +106,12 @@
 						<td>{{bill.date | date:'yyyy-MM-dd'}}</td>
 						<td>{{bill.name}}</td>
 						<td>{{bill.total}}</td>
+						<td>
+							<div class="btn-group">
+  								<button ng-click="editBill(bill['jcr:path'])" type="button" class="btn btn-default glyphicon glyphicon-pencil"></button>
+  								<button ng-click="deleteBill(bill['jcr:path'])" type="button" class="btn btn-default glyphicon glyphicon-trash"></button>
+							</div>
+						</td>
 					</tr>
 				</tbody>
 			</table>

@@ -2,36 +2,29 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 	$scope.products = [];
 	$scope.total = 0;
 	$scope.bills = [];
-
-	$scope.addProduct = function() {
-		name = $scope.enteredValue
-		$scope.products.push({
-			"name" : $scope.enteredName,
-			"value" : $scope.enteredValue
-		});
-		$scope.enteredName = '';
-		$scope.enteredValue = '';
-
-		$scope.total = 0;
-		angular.forEach($scope.products, function(value, key) {
-			$scope.total = $scope.total + +value.value;
-		});
-	};
-
-	$scope.open = function($event) {
-		$event.preventDefault();
-		$event.stopPropagation();
-
-		$scope.opened = true;
-	};
-
-	$scope.postReceipt = function() {
-
-		var yyyy = $scope.date.getFullYear().toString();
-		var mm = ($scope.date.getMonth() + 1).toString();
+	
+	getSimpleDate = function(date) {
+		var yyyy = date.getFullYear().toString();
+		var mm = (date.getMonth() + 1).toString();
 		mm = mm[1] ? mm : "0" + mm[0];
-		var dd = $scope.date.getDate().toString();
+		var dd = date.getDate().toString();
 		dd = dd[1] ? dd : "0" + dd[0];
+		var simpleDate = {
+			year  :  yyyy,
+			month : mm,
+			day   : dd
+		};
+		return simpleDate;
+	}
+	
+	getSimpleDateString = function(date) {
+		var simpleDate = getSimpleDate(date);
+		return simpleDate.year + '-' + simpleDate.month + '-' + simpleDate.day
+	}
+
+	$scope.createBill = function() {
+		
+		var simpleDate = getSimpleDate($scope.date);
 
 		var params = {};
 		params["sling:resourceType"] = "mymoney:bill";
@@ -46,8 +39,8 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 
 		$http({
 			method : 'POST',
-			url : '/content/mymoney/bill-data/' + yyyy
-					+ '/' + mm + '/' + dd + '/'
+			url : '/content/mymoney/bill-data/' + simpleDate.year
+					+ '/' + simpleDate.month + '/' + simpleDate.day + '/'
 					+ $scope.desc,
 			data : $.param(params), // jQuery needed - why AngularJS, why?
 			headers : {
@@ -58,9 +51,42 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 		})
 		.success(function(data) {
 			console.log(data);
+			$scope.desc = '';
+			$scope.date = '';
 			$scope.getBills();
 		});
 	};
+	
+	$scope.editBill = function(path) {
+		 $http({
+			 method : 'GET',
+			 url : path+".infinity.json"
+	     })
+	     .success(function(data) {
+	    	 console.log(data);
+	    	 $scope.desc = data.desc;
+	    	 $scope.date = getSimpleDateString(new Date(data.date));
+	    	 $scope.products = data.products;
+	    	 console.log(data.products);
+	     });
+	}
+	
+	$scope.deleteBill = function(path) {
+		$http({
+			method : 'POST',
+			url : path,
+			data : $.param({
+				":operation": 'delete'
+			}),
+			headers : {
+				'Content-Type' : 'application/x-www-form-urlencoded'
+			}
+		})
+		.success(function(data) {
+			console.log(data);
+			$scope.getBills();
+		});
+	}
 	
 	$scope.getBills = function() {
         $http({
@@ -76,6 +102,29 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
         });
     };
     $scope.bills = $scope.getBills();
+    
+	$scope.addProduct = function() {
+		name = $scope.enteredValue
+		$scope.products.push({
+			"name" : $scope.enteredName,
+			"value" : $scope.enteredValue
+		});
+		$scope.enteredName = '';
+		$scope.enteredValue = '';
+
+		$scope.total = 0;
+		angular.forEach($scope.products, function(value, key) {
+			$scope.total = $scope.total + +value.value;
+		});
+	};
+    
+//	datepicker
+	$scope.open = function($event) {
+		$event.preventDefault();
+		$event.stopPropagation();
+
+		$scope.opened = true;
+	};
 	
 	
 });
