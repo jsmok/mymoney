@@ -1,7 +1,13 @@
 myMoneyApp.controller('billsCtrl', function($scope, $http) {
+//	view switches
+	$scope.toggleAddProduct = false;
+//	bills list
+	$scope.bills = [];
+//  products section in bill create / update	
 	$scope.products = [];
 	$scope.total = 0;
-	$scope.bills = [];
+	
+	$scope.isEditMode = false;	
 	
 	getSimpleDate = function(date) {
 		var yyyy = date.getFullYear().toString();
@@ -21,27 +27,35 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 		var simpleDate = getSimpleDate(date);
 		return simpleDate.year + '-' + simpleDate.month + '-' + simpleDate.day
 	}
+	
+	$scope.createOrUpdateBill = function() {
+		if($scope.isEditMode) {
+			$scope.updateBill();
+		} else {
+			$scope.createBill();
+		}
+	}
 
 	$scope.createBill = function() {
 		
-		var simpleDate = getSimpleDate($scope.date);
+		var simpleDate = getSimpleDate($scope.billDate);
 
 		var params = {};
 		params["sling:resourceType"] = "mymoney:bill";
-		params["desc"] = $scope.desc;
+		params["name"] = $scope.billName;
 		params["date@TypeHint"] = "Date";
-		params["date"] = $scope.date;
+		params["date"] = $scope.billDate;
 		params["total"] = $scope.total;
 		params["total@TypeHint"] = "Double";
 		angular.forEach($scope.products, function(value, key) {
 			params['products/' + value.name + '/value'] = value.value;
 		});
-
+		
 		$http({
 			method : 'POST',
 			url : '/content/mymoney/bill-data/' + simpleDate.year
 					+ '/' + simpleDate.month + '/' + simpleDate.day + '/'
-					+ $scope.desc,
+					+ $scope.billName,
 			data : $.param(params), // jQuery needed - why AngularJS, why?
 			headers : {
 				'Content-Type' : 'application/x-www-form-urlencoded'
@@ -51,8 +65,9 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 		})
 		.success(function(data) {
 			console.log(data);
-			$scope.desc = '';
-			$scope.date = '';
+			$scope.billName = '';
+			$scope.billDate = '';
+			$scope.products = [];
 			$scope.getBills();
 		});
 	};
@@ -64,13 +79,15 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 	     })
 	     .success(function(data) {
 	    	 console.log(data);
-	    	 $scope.desc = data.desc;
-	    	 $scope.date = getSimpleDateString(new Date(data.date));
+	    	 $scope.billName = data.name;
+	    	 $scope.billDate = getSimpleDateString(new Date(data.date));
 	    	 $scope.products = data.__children__[0].__children__;
+	    	 $scope.total = 0;
 	    	 angular.forEach($scope.products, function(value, key) {
 	 			value.name = value.__name__;
 	 			$scope.total = $scope.total + +value.value;
 	 		 });
+	    	 $scope.isEditMode = true;
 	    	 console.log( $scope.products);
 	     });
 	}
@@ -108,19 +125,31 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
     $scope.bills = $scope.getBills();
     
 	$scope.addProduct = function() {
-		name = $scope.enteredValue
+		name = $scope.productValue
 		$scope.products.push({
-			"name" : $scope.enteredName,
-			"value" : $scope.enteredValue
+			"name" : $scope.productName,
+			"value" : $scope.productValue
 		});
-		$scope.enteredName = '';
-		$scope.enteredValue = '';
+		$scope.productName = '';
+		$scope.productValue = '';
 
 		$scope.total = 0;
 		angular.forEach($scope.products, function(value, key) {
 			$scope.total = $scope.total + +value.value;
 		});
 	};
+	
+	$scope.showAddProduct = function() {
+		$scope.productName = '';
+		$scope.productValue = '';
+		$scope.toggleAddProduct = true;
+	}
+	
+	$scope.cancelAddProduct = function() {
+		$scope.productName = '';
+		$scope.productValue = '';
+		$scope.toggleAddProduct = false;
+	}
     
 //	datepicker
 	$scope.open = function($event) {
