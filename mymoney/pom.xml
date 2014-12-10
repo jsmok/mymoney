@@ -10,5 +10,7 @@
   <modules>
   	<module>mymoney-content</module>
     <module>mymoney-auth</module>
+    <module>mymoney-stats</module>
+    <module>mymoney-example-content</module>
   </modules>
 </project>

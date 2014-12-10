@@ -1,0 +1,50 @@
+{
+	"name": "PiP",
+	"sling:resourceType": "mymoney:bill",
+	"jcr:createdBy": "admin",
+	"date": "Tue Jul 01 2014 12:00:00 GMT+0200",
+	"total": 12312,
+	"jcr:created": "Sat Aug 16 2014 20:39:39 GMT+0200",
+	"jcr:primaryType": "sling:Folder",
+	"products": 
+	{
+		"jcr:createdBy": "admin",
+		"date": "Tue Jul 01 2014 12:00:00 GMT+0200",
+		"jcr:primaryType": "sling:Folder",
+		"chleb": 
+		{
+			"jcr:createdBy": "admin",
+			"date": "Tue Jul 01 2014 12:00:00 GMT+0200",
+			"value": "2.6",
+			"jcr:primaryType": "sling:Folder"
+		},
+		"maslo": 
+        {
+            "jcr:createdBy": "admin",
+            "date": "Tue Jul 01 2014 12:00:00 GMT+0200",
+            "value": "5.3",
+            "jcr:primaryType": "sling:Folder"
+        },
+        "jajka": 
+        {
+            "jcr:createdBy": "admin",
+            "date": "Tue Jul 01 2014 12:00:00 GMT+0200",
+            "value": "4",
+            "jcr:primaryType": "sling:Folder"
+        },
+        "szynka": 
+        {
+            "jcr:createdBy": "admin",
+            "date": "Tue Jul 01 2014 12:00:00 GMT+0200",
+            "value": "8.5",
+            "jcr:primaryType": "sling:Folder"
+        },
+        "papryka": 
+        {
+            "jcr:createdBy": "admin",
+            "date": "Tue Jul 01 2014 12:00:00 GMT+0200",
+            "value": "3.0",
+            "jcr:primaryType": "sling:Folder"
+        }
+	}
+}
