@@ -1,4 +1,5 @@
 myMoneyApp.controller('billsCtrl', function($scope, $http) {
+	$scope.destFolder = '/content/mymoney/bill-data/';
 //	view switches
 	$scope.toggleAddProduct = false;
 //	bills list
@@ -7,7 +8,8 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 	$scope.products = [];
 	$scope.total = 0;
 	
-	$scope.isEditMode = false;	
+	$scope.isEditMode = false;
+	$scope.currentPath = '';
 	
 	getSimpleDate = function(date) {
 		var yyyy = date.getFullYear().toString();
@@ -36,8 +38,7 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 		}
 	}
 
-	$scope.createBill = function() {
-		
+	$scope.createBill = function() {		
 		var simpleDate = getSimpleDate($scope.billDate);
 
 		var params = {};
@@ -72,6 +73,45 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 		});
 	};
 	
+	$scope.updateBill = function() {
+		var simpleDate = getSimpleDate($scope.billDate);
+		
+		$http({
+			method : 'POST',
+			url : '/content/mymoney/bill-data/' + simpleDate.year
+					+ '/' + simpleDate.month + '/' + simpleDate.day,
+			headers : {
+				'Content-Type' : 'application/x-www-form-urlencoded'
+			}
+		})
+		.success(function() {
+			var params = {};
+			params[":operation"] = 'move'; console.log('destFolder '+$scope.destFolder);
+			params[":dest"] = $scope.destFolder  + simpleDate.year
+			+ '/' + simpleDate.month + '/' + simpleDate.day + '/'
+			+ $scope.billName
+			console.log(params);
+			$http({
+				method : 'POST',
+				url : $scope.currentPath,
+				data : $.param(params), // jQuery needed -
+										// why AngularJS,
+										// why?
+				headers : {
+					'Content-Type' : 'application/x-www-form-urlencoded'
+				}
+			// set the headers so angular passing info as
+			// form data (not request payload)
+			}).success(function(data) {
+				console.log(data);
+				$scope.carName = '';
+				$scope.isEditMode = false;
+				$scope.currentPath = '';
+				$scope.getBills();
+			});
+		});
+	};
+	
 	$scope.editBill = function(path) {
 		 $http({
 			 method : 'GET',
@@ -88,6 +128,8 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 	 			$scope.total = $scope.total + +value.value;
 	 		 });
 	    	 $scope.isEditMode = true;
+	    	 $scope.currentPath = path;
+	    	 console.log( $scope.currentPath);
 	    	 console.log( $scope.products);
 	     });
 	}
