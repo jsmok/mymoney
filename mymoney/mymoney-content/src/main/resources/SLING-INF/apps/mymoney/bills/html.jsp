@@ -39,16 +39,16 @@
 					</div>
 				</form>
 				<br>
-				<table class="table table-hover" ng-show='products.length > 0'>
+				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th>Product</th>
+							<th>Product <button class="btn btn-default glyphicon glyphicon-plus" ng-click="openModal()"></button></th>
 							<th style="text-align: center">#</th>
 							<th class="text-center">Price</th>
 							<th class="text-center">Total</th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody ng-show='products.length > 0'>
 						<tr ng-repeat="product in products">
 							<td class="col-md-9"><em>{{product.name}}</em></td>
 							<td class="col-md-1" style="text-align: center">{{product.index}}</td>
@@ -63,31 +63,6 @@
 						</tr>
 					</tbody>
 				</table>
-				<div class="panel panel-default" ng-hide="toggleAddProduct">
-					<div class="panel-heading"><label>Add product</label> <button ng-click="showAddProduct()" class="btn btn-default glyphicon glyphicon-plus" id="showAddProduct"></button></div>
-				</div>
-				<div class="panel panel-default" ng-show="toggleAddProduct">
-					<div class="panel-heading"><label>Add product</label></div>
-					<div class="panel-body">
-						<form class="form-inline">
-							<div class="form-group" class="form-inline">
-								<div class="input-group">
-									<span class="input-group-addon"><span class="glyphicon glyphicon-pushpin"> Name:</span></span> 
-									<input type="text" class="form-control" id="productName" ng-model="productName" placeholder="Name">
-								</div>
-								<div class="input-group">
-									<span class="input-group-addon"><span class="glyphicon glyphicon-usd"> Value:</span></span> 
-									<input type="text" class="form-control" id="productValue" ng-model="productValue" placeholder="Value">
-								</div>
-								<div class="btn-group">
-									<button ng-click="addProduct()" class="btn btn-default glyphicon glyphicon-ok" id="addProduct">
-									<button ng-click="cancelAddProduct()" class="btn btn-default glyphicon glyphicon-remove" id="cancelAddProduct"></button>
-								</div>
-								
-							</div>
-						</form>
-					</div>
-				</div>
 				<div class="btn-group">
 					<button ng-click="createOrUpdateBill()" class="btn btn-default glyphicon glyphicon-ok" id="createBill"></button>
 					<button ng-click="cancelBillCreation()" class="btn btn-default glyphicon glyphicon-remove"	id="cancelBillCreation"></button>
@@ -125,6 +100,6 @@
 				</tbody>
 			</table>
 		</div>
-	</div>
+	</div>	
 </body>
 </html>

@@ -1,15 +1,20 @@
-myMoneyApp.controller('billsCtrl', function($scope, $http) {
+myMoneyApp.controller('billsCtrl', function($scope, $modal, $log, $http) {
 	$scope.destFolder = '/content/mymoney/bill-data/';
-//	view switches
-	$scope.toggleAddProduct = false;
 //	bills list
 	$scope.bills = [];
 //  products section in bill create / update	
 	$scope.products = [];
+	$scope.product = {
+		name: '',
+		value: ''
+	};
+	
 	$scope.total = 0;
 	
 	$scope.isEditMode = false;
 	$scope.currentPath = '';
+	
+
 	
 	getSimpleDate = function(date) {
 		var yyyy = date.getFullYear().toString();
@@ -166,32 +171,17 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
     };
     $scope.bills = $scope.getBills();
     
-	$scope.addProduct = function() {
-		name = $scope.productValue
+	$scope.addProduct = function(product) {
 		$scope.products.push({
-			"name" : $scope.productName,
-			"value" : $scope.productValue
+			"name" : product.name,
+			"value" : product.value
 		});
-		$scope.productName = '';
-		$scope.productValue = '';
 
 		$scope.total = 0;
 		angular.forEach($scope.products, function(value, key) {
 			$scope.total = $scope.total + +value.value;
 		});
 	};
-	
-	$scope.showAddProduct = function() {
-		$scope.productName = '';
-		$scope.productValue = '';
-		$scope.toggleAddProduct = true;
-	}
-	
-	$scope.cancelAddProduct = function() {
-		$scope.productName = '';
-		$scope.productValue = '';
-		$scope.toggleAddProduct = false;
-	}
     
 //	datepicker
 	$scope.open = function($event) {
@@ -200,7 +190,36 @@ myMoneyApp.controller('billsCtrl', function($scope, $http) {
 
 		$scope.opened = true;
 	};
-	
-	
-});
 
+	$scope.openModal = function (size) {
+	    var modalInstance = $modal.open({
+	      templateUrl: 'bills.popup.html',
+	      controller: 'ModalInstanceCtrl',
+	      size: size,
+	      resolve: {
+        	product: function () {
+	          return $scope.product;
+	        }
+	      }
+	    });
+	    modalInstance.result.then(function (result) {
+	    	$log.info('Modal dismissed at: ' + new Date());
+	    	$log.info('Product: ' + JSON.stringify(result));
+	    	$scope.addProduct(result);
+	    });
+	};
+});
+myMoneyApp.controller('ModalInstanceCtrl', function ($scope, $modalInstance) {
+	$scope.product = {
+		name: '',
+		value: ''
+	};
+
+	$scope.ok = function () {
+		$modalInstance.close($scope.product);
+	};
+
+	$scope.cancel = function () {
+		$modalInstance.dismiss('cancel');
+	};
+});	
