@@ -28,11 +28,11 @@
 				<form name="form" class="form-inline" role="form" ng-submit="createOrUpdateBill()">
 					<div class="input-group">
 						<span class="input-group-addon">Desc:</span>
-						<input type="text" class="form-control" id="billName" ng-model="billName" placeholder="Name">
+						<input type="text" class="form-control" id="bill.name" ng-model="bill.name" placeholder="Name">
 					</div>
 					<div class="input-group">
 						<span class="input-group-addon">Date:</span>
-						<input type="text" class="form-control" id="billDate" datepicker-popup="dd-MM-yyyy" ng-model="billDate" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(billDate, mode)" ng-required="true" close-text="Close" />
+						<input type="text" class="form-control" id="bill.date" datepicker-popup="dd-MM-yyyy" ng-model="bill.date" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(bill.date, mode)" ng-required="true" close-text="Close" />
 						<span class="input-group-btn">
 			            	<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
 			            </span>
@@ -59,7 +59,7 @@
 							<td></td>
 							<td></td>
 							<td class="text-right"><strong>Total: </strong></td>
-							<td class="text-center text-danger"><strong>{{total}}</strong></td>
+							<td class="text-center text-danger"><strong>{{bill.total}}</strong></td>
 						</tr>
 					</tbody>
 				</table>

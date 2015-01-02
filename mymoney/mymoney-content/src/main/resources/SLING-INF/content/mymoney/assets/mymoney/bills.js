@@ -7,9 +7,13 @@ myMoneyApp.controller('billsCtrl', function($scope, $modal, $log, $http) {
 	$scope.product = {
 		name: '',
 		value: ''
-	};
+	}
 	
-	$scope.total = 0;
+	$scope.bill = {
+		name: '',
+		date: '',
+		total: 0
+	}
 	
 	$scope.isEditMode = false;
 	$scope.currentPath = '';
@@ -36,22 +40,18 @@ myMoneyApp.controller('billsCtrl', function($scope, $modal, $log, $http) {
 	}
 	
 	$scope.createOrUpdateBill = function() {
-		if($scope.isEditMode) {
-			$scope.updateBill();
-		} else {
-			$scope.createBill();
-		}
+		$scope.createBill();
 	}
 
 	$scope.createBill = function() {		
-		var simpleDate = getSimpleDate($scope.billDate);
+		var simpleDate = getSimpleDate($scope.bill.date);
 
 		var params = {};
 		params["sling:resourceType"] = "mymoney:bill";
-		params["name"] = $scope.billName;
+		params["name"] = $scope.bill.name;
 		params["date@TypeHint"] = "Date";
-		params["date"] = $scope.billDate;
-		params["total"] = $scope.total;
+		params["date"] = $scope.bill.date;
+		params["total"] = $scope.bill.total;
 		params["total@TypeHint"] = "Double";
 		angular.forEach($scope.products, function(value, key) {
 			params['products/' + value.name + '/value'] = value.value;
@@ -61,7 +61,7 @@ myMoneyApp.controller('billsCtrl', function($scope, $modal, $log, $http) {
 			method : 'POST',
 			url : '/content/mymoney/bill-data/' + simpleDate.year
 					+ '/' + simpleDate.month + '/' + simpleDate.day + '/'
-					+ $scope.billName,
+					+ $scope.bill.name,
 			data : $.param(params), // jQuery needed - why AngularJS, why?
 			headers : {
 				'Content-Type' : 'application/x-www-form-urlencoded'
@@ -70,52 +70,32 @@ myMoneyApp.controller('billsCtrl', function($scope, $modal, $log, $http) {
 			// form data (not request payload)
 		})
 		.success(function(data) {
-			console.log(data);
-			$scope.billName = '';
-			$scope.billDate = '';
-			$scope.products = [];
-			$scope.getBills();
-		});
-	};
-	
-	$scope.updateBill = function() {
-		var simpleDate = getSimpleDate($scope.billDate);
-		
-		$http({
-			method : 'POST',
-			url : '/content/mymoney/bill-data/' + simpleDate.year
-					+ '/' + simpleDate.month + '/' + simpleDate.day,
-			headers : {
-				'Content-Type' : 'application/x-www-form-urlencoded'
+			if($scope.isEditMode) {
+				params[":operation"] = 'delete';
+				console.log(params);
+				$http({
+					method : 'POST',
+					url : $scope.currentPath,
+					data : $.param(params),
+					headers : {
+						'Content-Type' : 'application/x-www-form-urlencoded'
+					}
+				}).success(function(data) {
+					$scope.tidyBillsView();
+				});
+			} else {
+				$scope.tidyBillsView();
 			}
-		})
-		.success(function() {
-			var params = {};
-			params[":operation"] = 'move'; console.log('destFolder '+$scope.destFolder);
-			params[":dest"] = $scope.destFolder  + simpleDate.year
-			+ '/' + simpleDate.month + '/' + simpleDate.day + '/'
-			+ $scope.billName
-			console.log(params);
-			$http({
-				method : 'POST',
-				url : $scope.currentPath,
-				data : $.param(params), // jQuery needed -
-										// why AngularJS,
-										// why?
-				headers : {
-					'Content-Type' : 'application/x-www-form-urlencoded'
-				}
-			// set the headers so angular passing info as
-			// form data (not request payload)
-			}).success(function(data) {
-				console.log(data);
-				$scope.carName = '';
-				$scope.isEditMode = false;
-				$scope.currentPath = '';
-				$scope.getBills();
-			});
 		});
-	};
+	}
+	
+	$scope.tidyBillsView = function() {
+		$scope.isEditMode = false;
+		$scope.bill.name = '';
+		$scope.bill.date = '';
+		$scope.products = [];
+		$scope.getBills();
+	}
 	
 	$scope.editBill = function(path) {
 		 $http({
@@ -124,18 +104,22 @@ myMoneyApp.controller('billsCtrl', function($scope, $modal, $log, $http) {
 	     })
 	     .success(function(data) {
 	    	 console.log(data);
-	    	 $scope.billName = data.name;
-	    	 $scope.billDate = getSimpleDateString(new Date(data.date));
-	    	 $scope.products = data.__children__[0].__children__;
-	    	 $scope.total = 0;
+	    	 $scope.bill.name = data.name;
+	    	 $scope.bill.date = new Date(data.date);
+	    	 if(data.__children__) {
+	    		 $scope.products = data.__children__[0].__children__;
+	    	 } else {
+	    		 $scope.products = [];
+	    	 }
+	    	 $scope.bill.total = 0;
 	    	 angular.forEach($scope.products, function(value, key) {
 	 			value.name = value.__name__;
-	 			$scope.total = $scope.total + +value.value;
+	 			$scope.bill.total = $scope.bill.total + +value.value;
 	 		 });
 	    	 $scope.isEditMode = true;
 	    	 $scope.currentPath = path;
 	    	 console.log( $scope.currentPath);
-	    	 console.log( $scope.products);
+	    	 console.log( JSON.stringify($scope.products));
 	     });
 	}
 	
@@ -177,9 +161,9 @@ myMoneyApp.controller('billsCtrl', function($scope, $modal, $log, $http) {
 			"value" : product.value
 		});
 
-		$scope.total = 0;
+		$scope.bill.total = 0;
 		angular.forEach($scope.products, function(value, key) {
-			$scope.total = $scope.total + +value.value;
+			$scope.bill.total = $scope.bill.total + +value.value;
 		});
 	};
     
