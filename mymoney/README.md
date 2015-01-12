@@ -9,3 +9,5 @@ The app is tested with [Sling Standalone Application 7](http://sling.apache.org/
 Build it using Java 7 and Maven 3:
 
     mvn clean install -PautoInstallBundle
+    
+'autoInstallBundle' profile will install the app on Sling instance running on default port.
